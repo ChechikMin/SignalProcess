@@ -6,11 +6,11 @@ import matplotlib.pyplot as plt
 class Initial:
 
     def __init__(self):
-        df = pd.read_csv("Xi_Yi_Points.txt", header=None, delimiter="\t")
+        df = pd.read_csv("NewPoints.txt", header=None, delimiter="\t")
 
         self.__x = df[0]
         self.__y = df[1]
-        self.__analytic = lambda x: (x + 0.8)*(x + 0.3)*(x - 0.8) + 3*np.exp(-(x**2 / (2 * 0.04**2)))
+        #self.__analytic = lambda x: (x + 0.8)*(x + 0.3)*(x - 0.8) + 3*np.exp(-(x**2 / (2 * 0.04**2)))
 
     def plotInitialRithm(self, x, y):
 

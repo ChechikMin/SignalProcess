@@ -8,6 +8,11 @@ from scipy.optimize import leastsq
 from scipy.optimize import least_squares
 
 
+SIGMA = "sigma"
+A = "A"
+MEAN = "mean"
+
+
 class Approximation:
 
     def __init__(self, pointsX, pointsY, parameters):
@@ -18,30 +23,72 @@ class Approximation:
         self.__y = pointsY
         self.__plotFunc = lambda x, y: plt.plot(x, y)
 
-    def calculate(self):
+    def calculate(self, mode:int):
 
         def model(x, u):
-            return x[0] * np.exp(-((u - x[1]) ** 2 / (2 * x[2] ** 2)))
+            return x[0] * np.exp(-((u - x[1]) ** 2 / (2 * x[2] ** 2))) + x[3] * np.exp(-((u - x[4]) ** 2 / (2 * x[5] ** 2)))
 
         def fun(x, u, y):
             return model(x, u) - y
 
-        def jac(x, u, y):
+        def jac3(x, u, y):#For one gauss
 
             J = np.empty((u.size, x.size))
 
-            expa = x[0] * np.exp( - (u - x[1])**2/(2*x[2]**2) )
+            expa = 0
 
-            J[:, 0] = expa / x[0]
+            for i in range(mode):
+                expa = x[i * 3] * np.exp(- (u - x[3*i + 1])**2/(2*x[3*i + 2]**2))
 
-            J[:, 1] = - expa * (u - x[1]) / x[2]**2
+            J[:, 0] = expa / x[0] + expa / x[3] + expa / x[6]
 
-            J[:, 2] = expa * (u - x[1])**2 / x[2]**3
+            J[:, 1] = - expa * (u - x[1]) / x[2]**2 - expa * (u - x[4]) / x[5]**2 - expa * (u - x[7]) / x[8]**2
+
+            J[:, 2] = expa * (u - x[1])**2 / x[2]**3 + expa * (u - x[4])**2 / x[5]**3 + expa * (u - x[7]) / x[8]**3
 
             return J
 
-        x0 = np.array([0.1, 0, 0.1])
-        res = least_squares(fun, x0, jac=jac, bounds=(-1, 50), args=(self.__x, self.__y), verbose=1)
+
+        def jac2(x, u, y):#For one gauss
+
+            J = np.empty((u.size, x.size))
+
+            expa = 0
+
+            for i in range(mode):
+                expa = x[i * 3] * np.exp(- (u - x[3*i + 1])**2/(2*x[3*i + 2]**2))
+
+            J[:, 0] = expa / x[0] + expa / x[3]
+
+            J[:, 1] = - expa * (u - x[1]) / x[2]**2 - expa * (u - x[4]) / x[5]**2
+
+            J[:, 2] = expa * (u - x[1])**2 / x[2]**3 + expa * (u - x[4])**2 / x[5]**3
+
+            return J
+
+        def jac1(x, u, y):  # For two gauss
+
+            J = np.empty((u.size, x.size))
+
+            expa = x[0] * np.exp(- (u - x[1]) ** 2 / (2 * x[2] ** 2))
+
+            J[:, 0] = expa / x[0]
+
+            J[:, 1] = - expa * (u - x[1]) / x[2] ** 2
+
+            J[:, 2] = expa * (u - x[1]) ** 2 / x[2] ** 3
+
+            return J
+
+        x0 = self.unpackInit(mode)
+        #x0 = np.array([3, 0, 0.04])
+        print(x0)
+
+        if len(x0) < 3 * mode:
+            print("Little init parametrs")
+
+        res = least_squares(fun, x0, jac=jac2, bounds=(-1, 50), args=(self.__x, self.__y), verbose=1)
+
         print(res.x)
 
         self.__x = np.linspace(-1, 1)
@@ -55,6 +102,15 @@ class Approximation:
 
     def setPlotFunc(self, plotfunc):
         self.__plotFunc = plotfunc
+
+    def unpackInit(self, mode : int):
+        x0 = []
+        for i in range(mode):#1 - depends on parameters size or peaks
+            x0.append(self.__parameters["A" + str(i)])
+            x0.append(self.__parameters["mean" + str(i)])
+            x0.append(self.__parameters["sigma" + str(i)])
+
+        return np.array(x0)
 
     def plot(self):
         self.__plotFunc(self.__x, self.__y)

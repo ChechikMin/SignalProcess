@@ -2,23 +2,32 @@
 
 import PlotInit
 import ApproxProcess
+import PreProcess
 # Press the green button in the gutter to run the script.
 
 
+modeler = "ThreeModal"
+hint = 3
 
 init = PlotInit.Initial()
 x = init.getPointsX()
 y = init.getPointsY()
+initValues = PreProcess.InitialProcess(x, y)
+initValues.setMode(modeler)
+initValues.calcInit()
 init.plotInitialRithm(x, y)
-init.plotAnalytics(x)
+#init.plotAnalytics(x)
 
-model = ApproxProcess.Approximation(x, y, { "sigma": 0.04, "a": 3, "mean":0 })
+#parametrs = { ApproxProcess.SIGMA : 0.04, ApproxProcess.A : 3, ApproxProcess.MEAN:0 }
+parameters = initValues.getParameters()
 
-model.calculate()
-#model.setPlotFunc(init.plotInitialRithm)
+model = ApproxProcess.Approximation(x, y, parameters)
+
+model.calculate(hint)
+model.setPlotFunc(init.plotInitialRithm)
 
 model.plot()
-PlotInit.plt.legend(('File', 'Formula', 'Test'),
+PlotInit.plt.legend(('File', 'Test'),
                    loc='upper right', shadow=True)
 PlotInit.plt.grid()
 PlotInit.plt.show()
