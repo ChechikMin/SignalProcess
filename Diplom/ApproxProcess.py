@@ -1,11 +1,11 @@
 
 import numpy as np
+import AlgorithmApp
 import time
 from scipy.fft import fft, fftfreq
 from scipy.optimize import minimize
 import matplotlib.pyplot as plt
 from scipy.optimize import leastsq
-from scipy.optimize import least_squares
 
 
 SIGMA = "sigma"
@@ -28,58 +28,6 @@ class Approximation:
         def model(x, u):
             return x[0] * np.exp(-((u - x[1]) ** 2 / (2 * x[2] ** 2))) + x[3] * np.exp(-((u - x[4]) ** 2 / (2 * x[5] ** 2)))
 
-        def fun(x, u, y):
-            return model(x, u) - y
-
-        def jac3(x, u, y):#For one gauss
-
-            J = np.empty((u.size, x.size))
-
-            expa = 0
-
-            for i in range(mode):
-                expa = x[i * 3] * np.exp(- (u - x[3*i + 1])**2/(2*x[3*i + 2]**2))
-
-            J[:, 0] = expa / x[0] + expa / x[3] + expa / x[6]
-
-            J[:, 1] = - expa * (u - x[1]) / x[2]**2 - expa * (u - x[4]) / x[5]**2 - expa * (u - x[7]) / x[8]**2
-
-            J[:, 2] = expa * (u - x[1])**2 / x[2]**3 + expa * (u - x[4])**2 / x[5]**3 + expa * (u - x[7]) / x[8]**3
-
-            return J
-
-
-        def jac2(x, u, y):#For one gauss
-
-            J = np.empty((u.size, x.size))
-
-            expa = 0
-
-            for i in range(mode):
-                expa = x[i * 3] * np.exp(- (u - x[3*i + 1])**2/(2*x[3*i + 2]**2))
-
-            J[:, 0] = expa / x[0] + expa / x[3]
-
-            J[:, 1] = - expa * (u - x[1]) / x[2]**2 - expa * (u - x[4]) / x[5]**2
-
-            J[:, 2] = expa * (u - x[1])**2 / x[2]**3 + expa * (u - x[4])**2 / x[5]**3
-
-            return J
-
-        def jac1(x, u, y):  # For two gauss
-
-            J = np.empty((u.size, x.size))
-
-            expa = x[0] * np.exp(- (u - x[1]) ** 2 / (2 * x[2] ** 2))
-
-            J[:, 0] = expa / x[0]
-
-            J[:, 1] = - expa * (u - x[1]) / x[2] ** 2
-
-            J[:, 2] = expa * (u - x[1]) ** 2 / x[2] ** 3
-
-            return J
-
         x0 = self.unpackInit(mode)
         #x0 = np.array([3, 0, 0.04])
         print(x0)
@@ -87,7 +35,10 @@ class Approximation:
         if len(x0) < 3 * mode:
             print("Little init parametrs")
 
-        res = least_squares(fun, x0, jac=jac2, bounds=(-1, 50), args=(self.__x, self.__y), verbose=1)
+        algorithm = AlgorithmApp.AlgNewton(mode, x0)
+        algorithm.setPoints(self.__x, self.__y)
+        algorithm.setModel(model)
+        res = algorithm.process()
 
         print(res.x)
 
@@ -105,7 +56,7 @@ class Approximation:
 
     def unpackInit(self, mode : int):
         x0 = []
-        for i in range(mode):#1 - depends on parameters size or peaks
+        for i in range(mode):# depends on parameters size or peaks
             x0.append(self.__parameters["A" + str(i)])
             x0.append(self.__parameters["mean" + str(i)])
             x0.append(self.__parameters["sigma" + str(i)])

@@ -5,9 +5,10 @@ import ApproxProcess
 import PreProcess
 # Press the green button in the gutter to run the script.
 
+modes = {"ThreeModal":  3, "BiModal": 2, "OneModal": 1}
 
 modeler = "ThreeModal"
-hint = 3
+hint = modes.get(modeler)
 
 init = PlotInit.Initial()
 x = init.getPointsX()
