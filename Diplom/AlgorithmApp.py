@@ -2,6 +2,7 @@
 
 import numpy as np
 from scipy.optimize import least_squares
+from scipy.optimize import minimize
 
 class Algorithm:
 
@@ -25,7 +26,7 @@ class Algorithm:
     def fun(self,x, u, y):
         return self.model(x, u) - y
 
-    def jac3(self, x, u, y):  # For one gauss
+    def jac3(self, x, u):  # For one gauss
 
         J = np.empty((u.size, x.size))
 
@@ -43,7 +44,7 @@ class Algorithm:
 
         return J
 
-    def jac2(self, x, u, y):  # For one gauss
+    def jac2(self, x, u):  # For one gauss
 
         J = np.empty((u.size, x.size))
 
@@ -60,7 +61,7 @@ class Algorithm:
 
         return J
 
-    def jac1(self, x, u, y):  # For two gauss
+    def jac1(self, x, u):  # For two gauss
 
         J = np.empty((u.size, x.size))
 
@@ -86,5 +87,25 @@ class AlgNewton(Algorithm):
             super().fun, self.x0, jac=super().jac3,
             bounds = (-1, 50), args=(self._x, self._y), verbose=1
             )
+
+
+class Newton_Conjugate_Gradient(Algorithm):
+    def __init__(self, mode : int, x0):
+        super().__init__(mode, x0)
+
+    def process(self):
+        res = []
+        for x,y in zip(self._x, self._y):
+            res = minimize(super().fun, self.x0, method='nelder-mead',
+
+                       args=(x, y), jac=super().jac3, hess=self.Hessian,
+
+                            options={'xtol': 1e-8, 'disp': True})
+            print(res)
+
+        return res
+
+    def Hessian(self):
+        pass#write hessian
 
 
