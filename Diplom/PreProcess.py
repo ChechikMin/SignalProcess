@@ -55,8 +55,8 @@ class InitialProcess:
         self.__parameters["A0"] = 3
         self.__parameters["mean0"] = 0
         self.__parameters["sigma0"] = 0.04
-        self.__parameters["A1"] = -1
-        self.__parameters["mean1"] = -0.25
+        self.__parameters["A1"] = 1
+        self.__parameters["mean1"] = 0.25
         self.__parameters["sigma1"] = 0.04
 
     def threeModal(self):
@@ -67,11 +67,11 @@ class InitialProcess:
         self.__parameters["A0"] = 3
         self.__parameters["mean0"] = 0
         self.__parameters["sigma0"] = 0.04
-        self.__parameters["A1"] = -1
-        self.__parameters["mean1"] = -0.25
+        self.__parameters["A1"] = 1
+        self.__parameters["mean1"] = -0.5
         self.__parameters["sigma1"] = 0.04
         self.__parameters["A2"] = 1
-        self.__parameters["mean2"] = -0.15
+        self.__parameters["mean2"] = 0.15
         self.__parameters["sigma2"] = 0.04
 
     def getParameters(self):

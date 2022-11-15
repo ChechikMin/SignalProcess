@@ -26,7 +26,9 @@ class Approximation:
     def calculate(self, mode:int):
 
         def model(x, u):
-            return x[0] * np.exp(-((u - x[1]) ** 2 / (2 * x[2] ** 2))) + x[3] * np.exp(-((u - x[4]) ** 2 / (2 * x[5] ** 2)))
+            return x[0] * np.exp(-((u - x[1]) ** 2 / (2 * x[2] ** 2))) + \
+                   x[3] * np.exp(-((u - x[4]) ** 2 / (2 * x[5] ** 2))) + \
+                   x[6] * np.exp(-((u - x[7]) ** 2 / (2 * x[8] ** 2)))
 
         x0 = self.unpackInit(mode)
         #x0 = np.array([3, 0, 0.04])
@@ -36,16 +38,17 @@ class Approximation:
             print("Little init parametrs")
 
         #algorithm = AlgorithmApp.AlgNewton(mode, x0)
-        algorithm = AlgorithmApp.Newton_Conjugate_Gradient(mode, x0)
+        algorithm = AlgorithmApp.CurveFit(mode, x0)
         algorithm.setPoints(self.__x, self.__y)
         algorithm.setModel(model)
         res = algorithm.process()
-
-        print(res.x)
+        #resY = res.x
+        resY = res
+        print(resY)
 
         self.__x = np.linspace(-1, 1)
 
-        self.__y = model(res.x, self.__x)
+        self.__y = model(resY, self.__x)
         #mean = res.x[0]
         #amplitude = res.x[1]
         #deviation = res.x[2]
