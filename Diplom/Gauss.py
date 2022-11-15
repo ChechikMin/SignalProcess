@@ -28,8 +28,10 @@ model.calculate(hint)
 model.setPlotFunc(init.plotInitialRithm)
 
 model.plot()
-PlotInit.plt.legend(('File', 'Test'),
+PlotInit.plt.legend(('Rithm', 'Fitting'),
                    loc='upper right', shadow=True)
+PlotInit.plt.xlabel("x")
+PlotInit.plt.ylabel("Signal")
 PlotInit.plt.grid()
 PlotInit.plt.show()
 

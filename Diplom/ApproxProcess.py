@@ -37,13 +37,14 @@ class Approximation:
         if len(x0) < 3 * mode:
             print("Little init parametrs")
 
-        #algorithm = AlgorithmApp.AlgNewton(mode, x0)
-        algorithm = AlgorithmApp.CurveFit(mode, x0)
+        algorithm = AlgorithmApp.AlgNewton(mode, x0)
+        #algorithm = AlgorithmApp.Newton_Conjugate_Gradient(mode, x0)
+        #algorithm = AlgorithmApp.CurveFit(mode, x0)
         algorithm.setPoints(self.__x, self.__y)
         algorithm.setModel(model)
         res = algorithm.process()
-        #resY = res.x
-        resY = res
+        resY = res.x
+        #resY = res
         print(resY)
 
         self.__x = np.linspace(-1, 1)

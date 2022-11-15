@@ -169,8 +169,14 @@ class CurveFit(Algorithm):
         super().__init__(mode, x0)
 
     def getGauss(self, number):
-
-        return self._x[:500 * number],self._y[:500 * number]
+        interval1 = 960
+        interval2 = 1132
+        if number == 1:
+            return self._x[:interval1],self._y[:interval1]
+        if number == 2:
+            return self._x[interval1:interval2], self._y[interval1:interval2]
+        if number == 3:
+            return self._x[interval2:600 * number], self._y[interval2:600 * number]
 
     def process(self):
 
@@ -187,6 +193,6 @@ class CurveFit(Algorithm):
         x, y = self.getGauss(2)
         [a2, b2, c2], res1 = curve_fit(func, x, y)
         x, y = self.getGauss(3)
-        [a3, b3, c3], res1 = curve_fit(func, x, y)
+        [a3, b3, c3], res1 = curve_fit(func, x, y, method="lm")
 
         return [a1,b1,c1, a2,b2,c2, a3,b3,c3]
