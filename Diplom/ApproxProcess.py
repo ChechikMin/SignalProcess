@@ -15,20 +15,16 @@ MEAN = "mean"
 
 class Approximation:
 
-    def __init__(self, pointsX, pointsY, parameters):
+    def __init__(self, pointsX, pointsY, parameters, model):
 
         self.__parameters = parameters
 
         self.__x = pointsX
         self.__y = pointsY
         self.__plotFunc = lambda x, y: plt.plot(x, y)
+        self.__modelFunc = model
 
     def calculate(self, mode:int):
-
-        def model(x, u):
-            return x[0] * np.exp(-((u - x[1]) ** 2 / (2 * x[2] ** 2))) + \
-                   x[3] * np.exp(-((u - x[4]) ** 2 / (2 * x[5] ** 2))) + \
-                   x[6] * np.exp(-((u - x[7]) ** 2 / (2 * x[8] ** 2)))
 
         x0 = self.unpackInit(mode)
         #x0 = np.array([3, 0, 0.04])
@@ -41,7 +37,7 @@ class Approximation:
         #algorithm = AlgorithmApp.Newton_Conjugate_Gradient(mode, x0)
         #algorithm = AlgorithmApp.CurveFit(mode, x0)
         algorithm.setPoints(self.__x, self.__y)
-        algorithm.setModel(model)
+        algorithm.setModel(self.__modelFunc)
         res = algorithm.process()
         resY = res.x
         #resY = res
@@ -49,7 +45,7 @@ class Approximation:
 
         self.__x = np.linspace(-1, 1)
 
-        self.__y = model(resY, self.__x)
+        self.__y = self.__modelFunc(resY, self.__x)
         #mean = res.x[0]
         #amplitude = res.x[1]
         #deviation = res.x[2]

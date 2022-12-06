@@ -98,7 +98,8 @@ class AlgNewton(Algorithm):
         return least_squares\
                 (
             super().fun, self.x0, jac=super().jac3,
-            bounds = (-50, 50), args=(self._x, self._y), verbose=1
+            bounds = (-50, 50), args=(self._x, self._y), verbose=1,
+                loss='huber', xtol = 1e-10
             )
 
 

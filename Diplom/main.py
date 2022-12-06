@@ -7,7 +7,7 @@ import numpy as np
 import time
 
 if __name__ == '__main__':
-    df = pd.read_csv("ExampleSignal_21_N=2000001_22n.txt", header=None)
+    df = pd.read_csv("PositiveGauss.txt", header=None, delimiter="\t")
     #x = df[0]
     y = df[0]
 

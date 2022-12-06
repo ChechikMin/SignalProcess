@@ -74,15 +74,15 @@ class InitialProcess:
         # self.__parameters["mean2"] = 0.15
         # self.__parameters["sigma2"] = 0.24
 
-        self.__parameters["A0"] = 0.1
-        self.__parameters["mean0"] = 0
+        self.__parameters["A0"] = 2
+        self.__parameters["mean0"] = 0.5
         self.__parameters["sigma0"] = 0.04
         self.__parameters["A1"] = -1
-        self.__parameters["mean1"] = -0.05
-        self.__parameters["sigma1"] = 0.24
-        self.__parameters["A2"] = -1
-        self.__parameters["mean2"] = 0.0
-        self.__parameters["sigma2"] = 0.01
+        self.__parameters["mean1"] = -0.1
+        self.__parameters["sigma1"] = 0.14
+        self.__parameters["A2"] = 1
+        self.__parameters["mean2"] = -0.7
+        self.__parameters["sigma2"] = 0.24
 
     def getParameters(self):
         i = 0
