@@ -33,7 +33,7 @@ init.plotInitialRithm(x, y)
 #parametrs = { ApproxProcess.SIGMA : 0.04, ApproxProcess.A : 3, ApproxProcess.MEAN:0 }
 parameters = initValues.getParameters()
 
-model = ApproxProcess.Approximation(x, y, parameters, derModel)
+model = ApproxProcess.Approximation(x, y, parameters, model)
 
 model.calculate(hint)
 model.setPlotFunc(init.plotInitialRithm)

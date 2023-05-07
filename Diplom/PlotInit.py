@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 class Initial:
 
     def __init__(self):
-        df = pd.read_csv("DerivitiveGauss.txt", header=None, delimiter="\t")
+        df = pd.read_csv("ThreeGaussPositive.txt", header=None, delimiter="\t")
 
         self.__x = df[0]
         self.__y = df[1]
